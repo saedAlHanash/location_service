@@ -41,7 +41,8 @@ class LocationService {
     String? notificationIcon,
     ServiceOptions? options,
   }) {
-    final effectiveOptions = options ??
+    final effectiveOptions =
+        options ??
         ServiceOptions(
           intervalSeconds: intervalSeconds,
           distanceFilterMeters: distanceFilterMeters,
@@ -102,31 +103,42 @@ class LocationService {
     LocationAccuracy accuracy = LocationAccuracy.high,
     Duration timeout = const Duration(seconds: 8),
   }) {
-    return _platform.getCurrentLocation(
-      accuracy: accuracy,
-      timeout: timeout,
-    );
+    return _platform.getCurrentLocation(accuracy: accuracy, timeout: timeout);
   }
 
   /// Fetch last known device position immediately without turning on sensors.
-  static Future<LocationData?> getLastKnownLocation() {
-    return _platform.getLastKnownLocation();
+  static Future<LocationData?> getLastKnownLocation() async {
+    try {
+      return await _platform.getLastKnownLocation();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Fetch the initial location recorded when the background service was started.
+  static Future<LocationData?> getInitialLocation() async {
+    final permission = await LocationService.checkPermission();
+    if (!permission.isGranted) {
+      final req = await LocationService.requestPermission();
+      if (!req.isGranted) return null;
+    }
+    try {
+      final initialPosition =
+          await LocationService.getLastKnownLocation() ??
+          await LocationService.getCurrentLocation(accuracy: LocationAccuracy.high, timeout: const Duration(seconds: 4));
+      return initialPosition;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Calculate distance in meters between two geographic points using Haversine formula.
-  static double calculateDistance(
-    double startLatitude,
-    double startLongitude,
-    double endLatitude,
-    double endLongitude,
-  ) {
+  static double calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
     const double p = 0.017453292519943295; // Math.PI / 180
-    final double a = 0.5 -
+    final double a =
+        0.5 -
         math.cos((endLatitude - startLatitude) * p) / 2 +
-        math.cos(startLatitude * p) *
-            math.cos(endLatitude * p) *
-            (1 - math.cos((endLongitude - startLongitude) * p)) /
-            2;
+        math.cos(startLatitude * p) * math.cos(endLatitude * p) * (1 - math.cos((endLongitude - startLongitude) * p)) / 2;
     return 12742000 * math.asin(math.sqrt(a)); // 2 * R * 1000 in meters
   }
 
@@ -138,6 +150,7 @@ class LocationService {
 
   // Instance wrappers for flexibility
   Future<String?> platformVersion() => getPlatformVersion();
+
   Future<bool> start({
     int intervalSeconds = 5,
     double distanceFilterMeters = 0.0,
@@ -150,33 +163,38 @@ class LocationService {
     bool enableWakeLock = true,
     String? notificationIcon,
     ServiceOptions? options,
-  }) =>
-      startService(
-        intervalSeconds: intervalSeconds,
-        distanceFilterMeters: distanceFilterMeters,
-        trackingMode: trackingMode,
-        accuracy: accuracy,
-        notificationTitle: notificationTitle,
-        notificationText: notificationText,
-        stopButtonText: stopButtonText,
-        restartButtonText: restartButtonText,
-        enableWakeLock: enableWakeLock,
-        notificationIcon: notificationIcon,
-        options: options,
-      );
+  }) => startService(
+    intervalSeconds: intervalSeconds,
+    distanceFilterMeters: distanceFilterMeters,
+    trackingMode: trackingMode,
+    accuracy: accuracy,
+    notificationTitle: notificationTitle,
+    notificationText: notificationText,
+    stopButtonText: stopButtonText,
+    restartButtonText: restartButtonText,
+    enableWakeLock: enableWakeLock,
+    notificationIcon: notificationIcon,
+    options: options,
+  );
+
   Future<bool> stop() => stopService();
+
   Future<bool> restart() => restartService();
+
   Future<bool> setInterval(int seconds) => updateInterval(seconds);
+
   Future<bool> isRunning() => isServiceRunning();
 
   Future<LocationData?> currentLocation({
     LocationAccuracy accuracy = LocationAccuracy.high,
     Duration timeout = const Duration(seconds: 8),
-  }) =>
-      getCurrentLocation(accuracy: accuracy, timeout: timeout);
+  }) => getCurrentLocation(accuracy: accuracy, timeout: timeout);
 
   Future<LocationData?> lastKnownLocation() => getLastKnownLocation();
 
+  Future<LocationData?> initialLocation() => getInitialLocation();
+
   Stream<LocationData> get locationStream => onLocationChanged;
+
   Stream<ServiceStatus> get serviceStatusStream => onServiceStatusChanged;
 }
