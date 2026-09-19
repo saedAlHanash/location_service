@@ -1,4 +1,4 @@
-package com.example.location_serice_example
+package com.example.location_service_example
 
 import io.flutter.embedding.android.FlutterActivity
 

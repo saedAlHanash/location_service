@@ -1,21 +1,21 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'location_serice_method_channel.dart';
+import 'location_service_method_channel.dart';
 import 'src/models/location_data.dart';
 import 'src/models/service_options.dart';
 import 'src/models/service_status.dart';
 import 'src/models/tracking_mode.dart';
 
-abstract class LocationSericePlatform extends PlatformInterface {
-  LocationSericePlatform() : super(token: _token);
+abstract class LocationServicePlatform extends PlatformInterface {
+  LocationServicePlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static LocationSericePlatform _instance = MethodChannelLocationSerice();
+  static LocationServicePlatform _instance = MethodChannelLocationService();
 
-  static LocationSericePlatform get instance => _instance;
+  static LocationServicePlatform get instance => _instance;
 
-  static set instance(LocationSericePlatform instance) {
+  static set instance(LocationServicePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }

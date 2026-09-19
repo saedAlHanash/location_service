@@ -1,9 +1,9 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint location_serice.podspec` to validate before publishing.
+# Run `pod lib lint location_service.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'location_serice'
+  s.name             = 'location_service'
   s.version          = '0.0.1'
   s.summary          = 'A new Flutter project.'
   s.description      = <<-DESC
@@ -13,7 +13,7 @@ A new Flutter project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'location_serice/Sources/location_serice/**/*'
+  s.source_files = 'location_service/Sources/location_service/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '13.0'
 
@@ -25,5 +25,5 @@ A new Flutter project.
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your
   # plugin's privacy impact, and then uncomment this line. For more information,
   # see https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  # s.resource_bundles = {'location_serice_privacy' => ['location_serice/Sources/location_serice/PrivacyInfo.xcprivacy']}
+  # s.resource_bundles = {'location_service_privacy' => ['location_service/Sources/location_service/PrivacyInfo.xcprivacy']}
 end

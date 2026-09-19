@@ -1,4 +1,4 @@
-package com.example.location_serice
+package com.example.location_service
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -13,10 +13,10 @@ import kotlin.test.Test
  * you can run them directly from IDEs that support JUnit such as Android Studio.
  */
 
-internal class LocationSericePluginTest {
+internal class LocationServicePluginTest {
     @Test
     fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
-        val plugin = LocationSericePlugin()
+        val plugin = LocationServicePlugin()
 
         val call = MethodCall("getPlatformVersion", null)
         val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)

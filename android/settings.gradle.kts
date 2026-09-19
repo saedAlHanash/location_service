@@ -1,1 +1,1 @@
-rootProject.name = "location_serice"
+rootProject.name = "location_service"

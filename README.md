@@ -1,4 +1,4 @@
-# location_serice
+# location_service
 
 إضافة (Plugin) لتتبع الموقع في الخلفية على أندرويد عبر **Foreground Service** مع مؤقت دوري (Timer) وإشعار تفاعلي مباشر مع إمكانية الإيقاف النظيف.
 
@@ -34,24 +34,24 @@
 
 ### 1. طلب الصلاحيات وفحص الـ GPS:
 ```dart
-import 'package:location_serice/location_serice.dart';
+import 'package:location_service/location_service.dart';
 
 // طلب الصلاحيات (الموقع + الإشعارات)
-final permission = await LocationSerice.requestPermission();
+final permission = await LocationService.requestPermission();
 if (permission == LocationPermissionStatus.granted) {
   // الصلاحيات ممنوحة
 }
 
 // فحص تفعيل الـ GPS
-final isGpsOn = await LocationSerice.isGpsEnabled();
+final isGpsOn = await LocationService.isGpsEnabled();
 if (!isGpsOn) {
-  await LocationSerice.openLocationSettings();
+  await LocationService.openLocationSettings();
 }
 ```
 
 ### 2. تشغيل الخدمة بالخلفية:
 ```dart
-await LocationSerice.startService(
+await LocationService.startService(
   intervalSeconds: 5, // جلب الموقع كل 5 ثوانٍ (قابل للتعديل بأي وقت)
   notificationTitle: 'تتبع الموقع',
   notificationText: 'جاري تتبع الموقع في الخلفية...',
@@ -64,31 +64,31 @@ await LocationSerice.startService(
 ### 3. تعديل المؤقت لحظياً أثناء عمل الخدمة (Dynamic Interval):
 ```dart
 // تغيير فترة الجلب في أي وقت (مثلاً كل 10 ثوانٍ) دون الحاجة لإعادة التشغيل
-await LocationSerice.updateInterval(10);
+await LocationService.updateInterval(10);
 ```
 
 ### 4. إعادة تشغيل الخدمة بالكامل من الصفر (Restart Service):
 ```dart
 // إطفاء الخدمة بالكامل من جذورها وإعادة بنائها من الصفر بنظافة
-await LocationSerice.restartService();
+await LocationService.restartService();
 ```
 
 ### 5. إيقاف الخدمة:
 ```dart
-await LocationSerice.stopService();
+await LocationService.stopService();
 ```
 
 ### 6. الاستماع للمواقع وحالة الخدمة لحظياً:
 
 ```dart
 // الاستماع لتحديثات الموقع
-LocationSerice.onLocationChanged.listen((LocationData location) {
+LocationService.onLocationChanged.listen((LocationData location) {
   print('Latitude: ${location.latitude}, Longitude: ${location.longitude}');
   print('Time: ${location.dateTime}');
 });
 
 // الاستماع لحالة تشغيل الخدمة (مثلاً عند إيقافها من زر الإشعار)
-LocationSerice.onServiceStatusChanged.listen((ServiceStatus status) {
+LocationService.onServiceStatusChanged.listen((ServiceStatus status) {
   print('Is Running: ${status.isRunning}');
 });
 ```

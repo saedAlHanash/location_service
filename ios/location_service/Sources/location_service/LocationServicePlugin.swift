@@ -1,10 +1,10 @@
 import Flutter
 import UIKit
 
-public class LocationSericePlugin: NSObject, FlutterPlugin {
+public class LocationServicePlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "location_serice", binaryMessenger: registrar.messenger())
-    let instance = LocationSericePlugin()
+    let channel = FlutterMethodChannel(name: "location_service", binaryMessenger: registrar.messenger())
+    let instance = LocationServicePlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 

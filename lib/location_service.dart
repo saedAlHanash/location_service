@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'location_serice_platform_interface.dart';
+import 'location_service_platform_interface.dart';
 import 'src/models/location_data.dart';
 import 'src/models/service_options.dart';
 import 'src/models/service_status.dart';
@@ -12,10 +12,10 @@ export 'src/models/service_status.dart';
 export 'src/models/tracking_mode.dart';
 
 /// Flutter API for Android Background Location Service.
-class LocationSerice {
-  const LocationSerice();
+class LocationService {
+  const LocationService();
 
-  static LocationSericePlatform get _platform => LocationSericePlatform.instance;
+  static LocationServicePlatform get _platform => LocationServicePlatform.instance;
 
   /// Check platform version.
   static Future<String?> getPlatformVersion() {

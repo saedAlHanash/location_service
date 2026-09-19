@@ -1,6 +1,6 @@
-# location_serice_example
+# location_service_example
 
-Demonstrates how to use the location_serice plugin.
+Demonstrates how to use the location_service plugin.
 
 ## Getting Started
 

@@ -1,4 +1,4 @@
-package com.example.location_serice
+package com.example.location_service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -30,10 +30,10 @@ import java.util.Locale
 class LocationForegroundService : Service() {
 
     companion object {
-        const val ACTION_START = "com.example.location_serice.ACTION_START"
-        const val ACTION_STOP = "com.example.location_serice.ACTION_STOP"
-        const val ACTION_RESTART = "com.example.location_serice.ACTION_RESTART"
-        const val ACTION_UPDATE_INTERVAL = "com.example.location_serice.ACTION_UPDATE_INTERVAL"
+        const val ACTION_START = "com.example.location_service.ACTION_START"
+        const val ACTION_STOP = "com.example.location_service.ACTION_STOP"
+        const val ACTION_RESTART = "com.example.location_service.ACTION_RESTART"
+        const val ACTION_UPDATE_INTERVAL = "com.example.location_service.ACTION_UPDATE_INTERVAL"
 
         const val EXTRA_INTERVAL_SECONDS = "interval_seconds"
         const val EXTRA_DISTANCE_FILTER_METERS = "distance_filter_meters"

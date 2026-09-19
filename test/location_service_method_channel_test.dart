@@ -1,12 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:location_serice/location_serice_method_channel.dart';
+import 'package:location_service/location_service_method_channel.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelLocationSerice platform = MethodChannelLocationSerice();
-  const MethodChannel channel = MethodChannel('location_serice');
+  MethodChannelLocationService platform = MethodChannelLocationService();
+  const MethodChannel channel = MethodChannel('location_service');
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

@@ -1,4 +1,4 @@
-group = "com.example.location_serice"
+group = "com.example.location_service"
 version = "1.0-SNAPSHOT"
 
 buildscript {
@@ -26,7 +26,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.location_serice"
+    namespace = "com.example.location_service"
 
     compileSdk = 36
 

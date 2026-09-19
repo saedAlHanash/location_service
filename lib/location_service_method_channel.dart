@@ -1,19 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'location_serice_platform_interface.dart';
+import 'location_service_platform_interface.dart';
 import 'src/models/location_data.dart';
 import 'src/models/service_options.dart';
 import 'src/models/service_status.dart';
 import 'src/models/tracking_mode.dart';
 
-/// An implementation of [LocationSericePlatform] that uses method channels.
-class MethodChannelLocationSerice extends LocationSericePlatform {
+/// An implementation of [LocationServicePlatform] that uses method channels.
+class MethodChannelLocationService extends LocationServicePlatform {
   @visibleForTesting
-  final methodChannel = const MethodChannel('location_serice');
+  final methodChannel = const MethodChannel('location_service');
 
-  final _locationEventChannel = const EventChannel('location_serice/updates');
-  final _statusEventChannel = const EventChannel('location_serice/status');
+  final _locationEventChannel = const EventChannel('location_service/updates');
+  final _statusEventChannel = const EventChannel('location_service/status');
 
   Stream<LocationData>? _locationStream;
   Stream<ServiceStatus>? _statusStream;

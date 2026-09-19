@@ -1,4 +1,4 @@
-package com.example.location_serice
+package com.example.location_service
 
 import android.Manifest
 import android.app.Activity
@@ -27,7 +27,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 
-class LocationSericePlugin :
+class LocationServicePlugin :
     FlutterPlugin,
     MethodCallHandler,
     ActivityAware,
@@ -55,10 +55,10 @@ class LocationSericePlugin :
         context = ctx
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx)
 
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "location_serice")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "location_service")
         channel.setMethodCallHandler(this)
 
-        locationEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "location_serice/updates")
+        locationEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "location_service/updates")
         locationEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 locationSink = events
@@ -69,7 +69,7 @@ class LocationSericePlugin :
             }
         })
 
-        statusEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "location_serice/status")
+        statusEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "location_service/status")
         statusEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 statusSink = events

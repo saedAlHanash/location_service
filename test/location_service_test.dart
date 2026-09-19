@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:location_serice/location_serice.dart';
-import 'package:location_serice/location_serice_platform_interface.dart';
-import 'package:location_serice/location_serice_method_channel.dart';
+import 'package:location_service/location_service.dart';
+import 'package:location_service/location_service_platform_interface.dart';
+import 'package:location_service/location_service_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockLocationSericePlatform
+class MockLocationServicePlatform
     with MockPlatformInterfaceMixin
-    implements LocationSericePlatform {
+    implements LocationServicePlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 
@@ -59,27 +59,27 @@ class MockLocationSericePlatform
 }
 
 void main() {
-  final LocationSericePlatform initialPlatform = LocationSericePlatform.instance;
+  final LocationServicePlatform initialPlatform = LocationServicePlatform.instance;
 
-  test('$MethodChannelLocationSerice is the default instance', () {
-    expect(initialPlatform, isInstanceOf<MethodChannelLocationSerice>());
+  test('$MethodChannelLocationService is the default instance', () {
+    expect(initialPlatform, isInstanceOf<MethodChannelLocationService>());
   });
 
   test('getPlatformVersion', () async {
-    MockLocationSericePlatform fakePlatform = MockLocationSericePlatform();
-    LocationSericePlatform.instance = fakePlatform;
+    MockLocationServicePlatform fakePlatform = MockLocationServicePlatform();
+    LocationServicePlatform.instance = fakePlatform;
 
-    expect(await LocationSerice.getPlatformVersion(), '42');
+    expect(await LocationService.getPlatformVersion(), '42');
   });
 
   test('startService and stopService', () async {
-    MockLocationSericePlatform fakePlatform = MockLocationSericePlatform();
-    LocationSericePlatform.instance = fakePlatform;
+    MockLocationServicePlatform fakePlatform = MockLocationServicePlatform();
+    LocationServicePlatform.instance = fakePlatform;
 
-    expect(await LocationSerice.startService(), true);
-    expect(await LocationSerice.restartService(), true);
-    expect(await LocationSerice.updateInterval(10), true);
-    expect(await LocationSerice.stopService(), true);
+    expect(await LocationService.startService(), true);
+    expect(await LocationService.restartService(), true);
+    expect(await LocationService.updateInterval(10), true);
+    expect(await LocationService.stopService(), true);
   });
 }
 

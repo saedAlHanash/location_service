@@ -4,19 +4,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "location_serice",
+    name: "location_service",
     platforms: [
         .iOS("13.0")
     ],
     products: [
-        .library(name: "location-serice", targets: ["location_serice"])
+        .library(name: "location-service", targets: ["location_service"])
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework")
     ],
     targets: [
         .target(
-            name: "location_serice",
+            name: "location_service",
             dependencies: [
                 .product(name: "FlutterFramework", package: "FlutterFramework")
             ],

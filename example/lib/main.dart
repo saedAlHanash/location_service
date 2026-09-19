@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:location_serice/location_serice.dart';
+import 'package:location_service/location_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,9 +59,9 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
   }
 
   Future<void> _checkInitialState() async {
-    final running = await LocationSerice.isServiceRunning();
-    final gps = await LocationSerice.isGpsEnabled();
-    final perm = await LocationSerice.checkPermission();
+    final running = await LocationService.isServiceRunning();
+    final gps = await LocationService.isGpsEnabled();
+    final perm = await LocationService.checkPermission();
 
     if (!mounted) return;
     setState(() {
@@ -72,7 +72,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
   }
 
   void _subscribeToStreams() {
-    _locationSubscription = LocationSerice.onLocationChanged.listen((data) {
+    _locationSubscription = LocationService.onLocationChanged.listen((data) {
       if (!mounted) return;
       setState(() {
         _latestLocation = data;
@@ -80,7 +80,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
       });
     });
 
-    _statusSubscription = LocationSerice.onServiceStatusChanged.listen((status) {
+    _statusSubscription = LocationService.onServiceStatusChanged.listen((status) {
       if (!mounted) return;
       setState(() {
         _isServiceRunning = status.isRunning;
@@ -96,7 +96,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
   }
 
   Future<void> _requestPermissions() async {
-    final status = await LocationSerice.requestPermission();
+    final status = await LocationService.requestPermission();
     if (!mounted) return;
     setState(() {
       _permissionStatus = status;
@@ -105,7 +105,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
 
   Future<void> _toggleService() async {
     if (_isServiceRunning) {
-      await LocationSerice.stopService();
+      await LocationService.stopService();
       if (!mounted) return;
       setState(() {
         _isServiceRunning = false;
@@ -122,7 +122,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
         }
       }
 
-      final success = await LocationSerice.startService(
+      final success = await LocationService.startService(
         intervalSeconds: _intervalSeconds,
         notificationTitle: 'تتبع الموقع بالخلفية',
         notificationText: 'الخدمة نشطة وتجلب الموقع دورياً',
@@ -230,7 +230,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () => LocationSerice.openLocationSettings(),
+                          onPressed: () => LocationService.openLocationSettings(),
                           icon: const Icon(Icons.location_searching),
                           label: const Text('إعدادات الموقع'),
                         ),
@@ -283,7 +283,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
                         _intervalSeconds = newSec;
                       });
                       if (_isServiceRunning) {
-                        LocationSerice.updateInterval(newSec);
+                        LocationService.updateInterval(newSec);
                       }
                     },
                   ),
@@ -316,7 +316,7 @@ class _LocationServiceDemoPageState extends State<LocationServiceDemoPage> {
                         ),
                         onPressed: () async {
                           final messenger = ScaffoldMessenger.of(context);
-                          await LocationSerice.restartService();
+                          await LocationService.restartService();
                           if (!mounted) return;
                           messenger.showSnackBar(
                             const SnackBar(content: Text('تمت إعادة تشغيل الخدمة من الصفر')),
