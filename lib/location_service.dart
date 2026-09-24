@@ -145,6 +145,25 @@ class LocationService {
   /// Stream of location updates emitted periodically by the background service.
   static Stream<LocationData> get onLocationChanged => _platform.locationStream;
 
+  /// Fast, continuous foreground position stream for live UI tracking (e.g. map views).
+  ///
+  /// This runs directly in foreground memory while actively subscribed to, and stops
+  /// when the stream subscription is cancelled. DOES NOT run in the background.
+  static Stream<LocationData> getPositionStream({
+    LocationAccuracy accuracy = LocationAccuracy.high,
+    int intervalMillis = 1000,
+    int minUpdateIntervalMillis = 500,
+    double distanceFilterMeters = 0.0,
+  }) => _platform.getPositionStream(
+    accuracy: accuracy,
+    intervalMillis: intervalMillis,
+    minUpdateIntervalMillis: minUpdateIntervalMillis,
+    distanceFilterMeters: distanceFilterMeters,
+  );
+
+  /// Convenient getter for default fast position updates (1000ms interval).
+  static Stream<LocationData> get onPositionChanged => getPositionStream();
+
   /// Stream of service status updates (e.g. running state changes).
   static Stream<ServiceStatus> get onServiceStatusChanged => _platform.serviceStatusStream;
 

@@ -14,6 +14,9 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -36,6 +39,7 @@ class LocationServicePlugin :
     private lateinit var channel: MethodChannel
     private lateinit var locationEventChannel: EventChannel
     private lateinit var statusEventChannel: EventChannel
+    private lateinit var positionEventChannel: EventChannel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private var context: Context? = null
@@ -44,6 +48,8 @@ class LocationServicePlugin :
 
     private var locationSink: EventChannel.EventSink? = null
     private var statusSink: EventChannel.EventSink? = null
+    private var positionSink: EventChannel.EventSink? = null
+    private var positionCallback: LocationCallback? = null
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var pendingPermissionResult: Result? = null
@@ -83,6 +89,79 @@ class LocationServicePlugin :
 
             override fun onCancel(arguments: Any?) {
                 statusSink = null
+            }
+        })
+
+        positionEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "location_service/position_stream")
+        positionEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                positionSink = events
+                val args = arguments as? Map<*, *>
+                val interval = (args?.get("intervalMillis") as? Number)?.toLong() ?: 1000L
+                val minInterval = (args?.get("minUpdateIntervalMillis") as? Number)?.toLong() ?: 500L
+                val minDistance = (args?.get("distanceFilterMeters") as? Number)?.toFloat() ?: 0f
+                val accuracyArg = args?.get("accuracy") as? String ?: "high"
+
+                val priority = when (accuracyArg.lowercase()) {
+                    "balanced" -> Priority.PRIORITY_BALANCED_POWER_ACCURACY
+                    "low" -> Priority.PRIORITY_LOW_POWER
+                    "passive" -> Priority.PRIORITY_PASSIVE
+                    else -> Priority.PRIORITY_HIGH_ACCURACY
+                }
+
+                val hasFine = ContextCompat.checkSelfPermission(
+                    ctx,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+                val hasCoarse = ContextCompat.checkSelfPermission(
+                    ctx,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+
+                if (!hasFine && !hasCoarse) {
+                    events?.error("PERMISSION_DENIED", "Location permission is not granted", null)
+                    return
+                }
+
+                val req = LocationRequest.Builder(priority, interval).apply {
+                    setMinUpdateIntervalMillis(minInterval)
+                    setMinUpdateDistanceMeters(minDistance)
+                }.build()
+
+                positionCallback?.let {
+                    try {
+                        fusedLocationClient.removeLocationUpdates(it)
+                    } catch (_: Exception) {}
+                }
+
+                val callback = object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult) {
+                        locationResult.lastLocation?.let { loc ->
+                            mainHandler.post {
+                                positionSink?.success(locationToMap(loc))
+                            }
+                        }
+                    }
+                }
+                positionCallback = callback
+
+                try {
+                    fusedLocationClient.requestLocationUpdates(req, callback, Looper.getMainLooper())
+                } catch (e: SecurityException) {
+                    events?.error("SECURITY_EXCEPTION", e.localizedMessage, null)
+                } catch (e: Exception) {
+                    events?.error("LOCATION_ERROR", e.localizedMessage, null)
+                }
+            }
+
+            override fun onCancel(arguments: Any?) {
+                positionCallback?.let {
+                    try {
+                        fusedLocationClient.removeLocationUpdates(it)
+                    } catch (_: Exception) {}
+                }
+                positionCallback = null
+                positionSink = null
             }
         })
 
@@ -400,6 +479,14 @@ class LocationServicePlugin :
         channel.setMethodCallHandler(null)
         locationEventChannel.setStreamHandler(null)
         statusEventChannel.setStreamHandler(null)
+        positionCallback?.let {
+            try {
+                fusedLocationClient.removeLocationUpdates(it)
+            } catch (_: Exception) {}
+        }
+        positionCallback = null
+        positionSink = null
+        positionEventChannel.setStreamHandler(null)
         LocationForegroundService.locationListener = null
         LocationForegroundService.statusListener = null
         context = null

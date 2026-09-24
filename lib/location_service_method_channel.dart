@@ -14,6 +14,7 @@ class MethodChannelLocationService extends LocationServicePlatform {
 
   final _locationEventChannel = const EventChannel('location_service/updates');
   final _statusEventChannel = const EventChannel('location_service/status');
+  final _positionEventChannel = const EventChannel('location_service/position_stream');
 
   Stream<LocationData>? _locationStream;
   Stream<ServiceStatus>? _statusStream;
@@ -126,6 +127,24 @@ class MethodChannelLocationService extends LocationServicePlatform {
         .map((dynamic event) => LocationData.fromJson(Map<dynamic, dynamic>.from(event)))
         .asBroadcastStream();
     return _locationStream!;
+  }
+
+  @override
+  Stream<LocationData> getPositionStream({
+    LocationAccuracy accuracy = LocationAccuracy.high,
+    int intervalMillis = 1000,
+    int minUpdateIntervalMillis = 500,
+    double distanceFilterMeters = 0.0,
+  }) {
+    return _positionEventChannel
+        .receiveBroadcastStream({
+          'accuracy': accuracy.nameString,
+          'intervalMillis': intervalMillis,
+          'minUpdateIntervalMillis': minUpdateIntervalMillis,
+          'distanceFilterMeters': distanceFilterMeters,
+        })
+        .map((dynamic event) => LocationData.fromJson(Map<dynamic, dynamic>.from(event)))
+        .asBroadcastStream();
   }
 
   @override

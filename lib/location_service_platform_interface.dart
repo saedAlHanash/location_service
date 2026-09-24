@@ -75,6 +75,15 @@ abstract class LocationServicePlatform extends PlatformInterface {
     throw UnimplementedError('locationStream has not been implemented.');
   }
 
+  Stream<LocationData> getPositionStream({
+    LocationAccuracy accuracy = LocationAccuracy.high,
+    int intervalMillis = 1000,
+    int minUpdateIntervalMillis = 500,
+    double distanceFilterMeters = 0.0,
+  }) {
+    throw UnimplementedError('getPositionStream() has not been implemented.');
+  }
+
   Stream<ServiceStatus> get serviceStatusStream {
     throw UnimplementedError('serviceStatusStream has not been implemented.');
   }

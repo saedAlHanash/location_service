@@ -55,6 +55,15 @@ class MockLocationServicePlatform
   Stream<LocationData> get locationStream => const Stream.empty();
 
   @override
+  Stream<LocationData> getPositionStream({
+    LocationAccuracy accuracy = LocationAccuracy.high,
+    int intervalMillis = 1000,
+    int minUpdateIntervalMillis = 500,
+    double distanceFilterMeters = 0.0,
+  }) =>
+      const Stream.empty();
+
+  @override
   Stream<ServiceStatus> get serviceStatusStream => const Stream.empty();
 }
 
